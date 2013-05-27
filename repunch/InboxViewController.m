@@ -18,6 +18,8 @@
 
 @implementation InboxViewController
 
+int x = 2;
+
 @synthesize inboxData, name, title, description;
 
 - (void)viewDidLoad
@@ -107,7 +109,9 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 2;
+    return x;
+    
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -123,13 +127,34 @@
   //  cell.textLabel.text = [[inboxData objectAtIndex:indexPath.row] valueForKey:@"subject"];
     if(indexPath.row ==1)
     {
-    cell.textLabel.text = name;
-    cell.detailTextLabel.text = title;
-    return cell;
+        
+      
+        
+        
+        
+        cell.textLabel.text = name;
+        NSLog(@"the name %@", name);
+        cell.detailTextLabel.text = title;
+        return cell;
     }
      
     return cell;
      
+}
+
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"button pressed: %d",buttonIndex);
+    
+    //left
+    if (buttonIndex == 0)
+    {
+        
+    }
+    else if (buttonIndex == 1)
+    {
+    }
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -179,11 +204,30 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    InboxDetailViewController *idvc = [[InboxDetailViewController alloc] init];
-    [idvc setMessage:[inboxData objectAtIndex:indexPath.row]];
-    [self.navigationController pushViewController:idvc animated:YES];
-    [idvc release];
+    if(indexPath.row ==1)
+    {
+      NSLog(@"you clicked");
+        
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle: @"Redeem"
+                              message: @"You redeemed an award!"
+                              delegate: self
+                              cancelButtonTitle:nil
+                              otherButtonTitles:@"OK",nil];
+        
+        
+        [alert show];
+        
+        x--;
+        [tableView beginUpdates];
+        
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:tableView.indexPathForSelectedRow] withRowAnimation:UITableViewRowAnimationFade];
+        name = nil;
+        title = nil;
+        [tableView endUpdates];
+        [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    
+    }
 }
 
 - (void)didReceiveMemoryWarning

@@ -116,8 +116,11 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
    // NSLog(@"yo its me %@", my_id);
     
     
-   
+    NSData *test = newDeviceToken;
+    NSUserDefaults *testy = [NSUserDefaults standardUserDefaults];
+    [testy setObject:test forKey:@"device_token"];
     
+    /*
     
     PFUser *pfuser = [PFUser currentUser];
     User *localUser = [User MR_findFirstByAttribute:@"username" withValue:[pfuser username]];
@@ -137,7 +140,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
     [currentInstallation setObject:retailer forKey:@"retailer_id"];
 
     [currentInstallation saveInBackground];
-    
+    */
+     
 }
 
 - (void)application:(UIApplication *)application

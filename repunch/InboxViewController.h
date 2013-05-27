@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface InboxViewController : UITableViewController{
+@interface InboxViewController : UITableViewController <UIAlertViewDelegate>{
     NSMutableArray *inboxData;
     NSString *name;
     NSString *description;
@@ -22,6 +22,8 @@
 @property (nonatomic, retain) NSString *description;
 
 @property (nonatomic, retain) NSString *title;
+
+
 
 
 @end

@@ -157,6 +157,12 @@
     User *localUser = [User MR_findFirstByAttribute:@"username" withValue:[pfuser username]];
     placesData = [(NSMutableArray *)[localUser.my_places allObjects] retain];
     
+    //Retailer *thisPlace = [placesData objectAtIndex:0];
+    //NSString *retailer = thisPlace.retailer_id;
+    
+    //NSUserDefaults *memorial_day = [NSUserDefaults standardUserDefaults];
+    //[memorial_day setObject:retailer forKey:@"memorial_day"];
+    
     // For testing only -- BROKEN
 //    if ([placesData count] == 0 && [[pfuser objectForKey:@"my_places"] count] == 0) {
 //        [self fillPlacesDefault:YES];
@@ -193,6 +199,7 @@
     
     if (!defaultplaces) {
         [query whereKey:@"retailer_id" containedIn:[my_related_places valueForKey:@"retailer_id"]];
+        NSLog(@"Heya %@", query);
     }
     
 //    NSMutableArray *my_places = [[NSMutableArray alloc] initWithCapacity:0];

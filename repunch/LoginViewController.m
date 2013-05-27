@@ -124,6 +124,20 @@
             [appDelegate.window setRootViewController:appDelegate.tabBarController];
             [appDelegate.placesvc loadPlaces];
             
+            NSUserDefaults *testy = [NSUserDefaults standardUserDefaults];
+            NSData *local = [testy dataForKey:@"device_token"];
+            NSLog(@"I got it motherfucker %@", local);
+            
+            
+            NSString *retailer = [testy stringForKey:@"memorial_day"];
+            NSLog(@"yo BITCH %@", retailer);
+            
+            
+         
+            
+           
+            ///////
+            
         } else {
             // The login failed. Check error to see why.
             if (error.code == 101) {
@@ -132,6 +146,11 @@
             }
         }
     }];
+   
+    
+    
+    
+ 
 }
 
 - (void)fbLogin
