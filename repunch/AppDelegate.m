@@ -40,8 +40,6 @@
     
     [MagicalRecord setupCoreDataStackWithStoreNamed:@"repunch_local.sqlite"];
     
-    [BumpClient configureWithAPIKey:@"3f9faa8e3259459187e013ec751dc9c8"
-                          andUserID:[[UIDevice currentDevice] name]];
     
     [Parse setApplicationId:@"I7lzrryH0UERXmIzyv4rbf6wzucn0v6WUfyPUmn2"
                   clientKey:@"C8iOnNliJ08XEGvG3j3S3RHazTLEfd18lLsuDIky"];
