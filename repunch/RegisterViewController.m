@@ -62,52 +62,39 @@
     [scrollView addSubview:password2TextField];
     
     emailTextField = [[CustomTextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 127.5, password2TextField.frame.origin.y + password2TextField.frame.size.height + 10, 255, 40)];
-    [emailTextField setPlaceholder:@"Retailer ID*"];
+    [emailTextField setPlaceholder:@"Retailer Pin*"];
     [emailTextField setDelegate:self];
     [emailTextField setKeyboardType:UIKeyboardTypeEmailAddress];
     [emailTextField setReturnKeyType:UIReturnKeyNext];
     [scrollView addSubview:emailTextField];
     
-    birthdayTextField = [[CustomTextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 127.5, emailTextField.frame.origin.y + emailTextField.frame.size.height + 10, 255, 40)];
-    [birthdayTextField setPlaceholder:@"Birthday"];
-    [birthdayTextField setDelegate:self];
+    first_name = [[CustomTextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 127.5, emailTextField.frame.origin.y + emailTextField.frame.size.height + 10, 255, 40)];
+    [first_name setPlaceholder:@"First Name*"];
+    [first_name setDelegate:self];
+    [first_name setKeyboardType:UIKeyboardTypeEmailAddress];
+    [first_name setReturnKeyType:UIReturnKeyNext];
+    [scrollView addSubview:first_name];
     
-    datePicker = [[UIDatePicker alloc] init];
-    [datePicker setCenter:CGPointMake(self.view.frame.size.width / 2, self.view.frame.size.height + datePicker.frame.size.height / 2)];
-    [datePicker setDatePickerMode:UIDatePickerModeDate];
+    last_name = [[CustomTextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 127.5, first_name.frame.origin.y + first_name.frame.size.height + 10, 255, 40)];
+    [last_name setPlaceholder:@"Last Name*"];
+    [last_name setDelegate:self];
+    [last_name setKeyboardType:UIKeyboardTypeEmailAddress];
+    [last_name setReturnKeyType:UIReturnKeyNext];
+    [scrollView addSubview:last_name];
     
-    dateDoneView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-//    [dateDoneView setBackgroundImage:[UIImage imageNamed:@"bkg_header"] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                target:self
-                                                                                action:@selector(onDateSelection)];
-//    [doneButton setBackgroundImage:[UIImage imageNamed:@"btn-done"] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-    
-    [dateDoneView setItems:[NSArray arrayWithObject:doneButton]];
+    email = [[CustomTextField alloc] initWithFrame:CGRectMake(self.view.frame.size.width / 2 - 127.5, last_name.frame.origin.y + last_name.frame.size.height + 10, 255, 40)];
+    [email setPlaceholder:@"Email*"];
+    [email setDelegate:self];
+    [email setKeyboardType:UIKeyboardTypeEmailAddress];
+    [email setReturnKeyType:UIReturnKeyNext];
+    [scrollView addSubview:email];
     
   
-    
-    genderOptions = [[NSArray alloc] initWithObjects:@"Not Specified",@"Male",@"Female", nil];
-    
-    genderPicker = [[UIPickerView alloc] init];
-    [genderPicker setDelegate:self];
-    [genderPicker setDataSource:self];
-    [genderPicker setShowsSelectionIndicator:YES];
-    
-    genderDoneView = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-    UIBarButtonItem *doneButton2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                target:self
-                                                                                action:@selector(onGenderSelection)];
-    [genderDoneView setItems:[NSArray arrayWithObject:doneButton2]];
-    
-    [genderTextField setInputView:genderPicker];
-    [genderTextField setInputAccessoryView:genderDoneView];
-    [scrollView addSubview:genderTextField];
     
     UIImage *registerImage = [UIImage imageNamed:@"btn-register"];
     UIButton *registerButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [registerButton addTarget:self action:@selector(registerUser) forControlEvents:UIControlEventTouchUpInside];
-    [registerButton setFrame:CGRectMake(self.view.frame.size.width / 2 - registerImage.size.width / 2, genderTextField.frame.origin.y + genderTextField.frame.size.height + 270, registerImage.size.width, registerImage.size.height)];
+    [registerButton setFrame:CGRectMake(self.view.frame.size.width / 2 - registerImage.size.width / 2, email.frame.origin.y + email.frame.size.height +15 , registerImage.size.width, registerImage.size.height)];
     [registerButton setImage:registerImage forState:UIControlStateNormal];
     [scrollView addSubview:registerButton];
     
@@ -122,23 +109,7 @@
     [scrollView setContentSize:CGSizeMake(self.view.frame.size.width, cancelButton.frame.origin.y + cancelButton.frame.size.height + 20)];
 }
 
-- (void)onDateSelection
-{
-    if ([birthdayTextField isFirstResponder]) {
-        NSDateFormatter *df = [[[NSDateFormatter alloc] init] autorelease];
-        [df setDateFormat:@"MM/dd/yyyy"];
-        birthdayTextField.text = [NSString stringWithFormat:@"%@", [df stringFromDate:datePicker.date]];
-        [birthdayTextField resignFirstResponder];
-    }
-}
 
-- (void)onGenderSelection
-{
-    if ([genderTextField isFirstResponder]) {
-        [genderTextField setText:[genderOptions objectAtIndex:[genderPicker selectedRowInComponent:0]]];
-        [genderTextField resignFirstResponder];
-    }
-}
 
 - (void)cancel
 {
@@ -159,10 +130,102 @@
     PFUser *newUser = [PFUser user];
     newUser.username = usernameTextField.text;
     newUser.password = passwordTextField.text;
-    [newUser setObject:emailTextField.text forKey:@"retailer_id"];
-   // [newUser setObject:birthdayTextField.text forKey:@"birth_date"];
-    //[newUser setObject:[genderTextField.text lowercaseString] forKey:@"gender"];
+    newUser.email = email.text;
+
+
     
+   // [newUser setObject:emailTextField.text forKey:@"retailer_id"];
+    
+    //check
+    PFQuery *retailer_settings = [PFQuery queryWithClassName:@"RetailerSettings"];
+    [retailer_settings whereKey:@"retailer_pin" equalTo:emailTextField.text];
+    NSArray* settings_array = [retailer_settings findObjects];
+    
+    if([settings_array count] == 0)
+    {
+        NSLog(@"Retailer doesn't exist");
+        UIAlertView *av = [[[UIAlertView alloc] initWithTitle:@"Retailer Error" message:@"ID Does Not Exist" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil] autorelease];
+        [av show];
+    }
+    else
+    {
+        //Retailer Exists
+        NSLog(@"Retailer exists!");
+        
+        //Set is_employee to true
+        [newUser setObject:[NSNumber numberWithBool:YES] forKey:@"is_employee"];
+        
+        //TODO. not sent....
+        [newUser setObject:first_name.text forKey:@"first_name"];
+        [newUser setObject:last_name.text forKey:@"last_name"];
+        
+        PFObject *retailer_settings_new = [settings_array objectAtIndex:0];
+       
+        PFObject *retailer_pointer = [retailer_settings_new objectForKey:@"retailer"];
+        NSLog(@"whats here: %@", retailer_pointer);
+        
+        [retailer_pointer fetchIfNeededInBackgroundWithBlock:^(PFObject *object, NSError *error)
+         {
+             
+             NSLog(@"test %@", retailer_pointer);
+             UIActivityIndicatorView *activityIndicator;
+             activityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+             activityIndicator.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
+             activityIndicator.center = self.view.center;
+             [self.view addSubview: activityIndicator];
+             
+             [activityIndicator startAnimating];
+
+
+             
+             
+             //Create employee row
+             PFObject *employee = [PFObject objectWithClassName:@"Employee"];
+             [employee setObject:[NSNumber numberWithInt:0] forKey:@"all_time_punches"];
+             [employee setObject:[NSNumber numberWithBool:YES] forKey:@"authorized"];
+             NSString *retailer_id = [object objectForKey:@"retailer_id"];
+             
+             //temp storage
+             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+             [prefs setObject:retailer_id forKey:@"sign_up_id"];
+             NSLog(@"got it %@", retailer_id);
+             
+             
+             [employee setObject:object forKey:@"retailer"];
+             [employee saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+             {
+                 if(!error)
+                 {
+                     NSLog(@"yay!!");
+                     
+                     
+                  
+                     
+                     //Link it
+                     [newUser setObject:employee forKey:@"employee"];
+                     [newUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error)
+                     {
+                         [activityIndicator stopAnimating];
+                         //dismiss and switch view with placesviewcontroller as first view
+                         AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                         [appDelegate.window setRootViewController:appDelegate.tabBarController];
+                     }];
+                 }
+                 else
+                 {
+                     
+                 }
+             }];
+
+             
+         }];
+        
+        
+        
+        
+    
+    
+        //Sign up 
     [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
         if (!error) {
             NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
@@ -173,9 +236,8 @@
             [localUser setFromParse:newUser];
             [localContext MR_saveToPersistentStoreAndWait];            
             
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [appDelegate.window setRootViewController:appDelegate.tabBarController];
-            [appDelegate.placesvc loadPlaces];
+
+        //    [appDelegate.placesvc loadPlaces];
         } else {
             // check error, alert user
             NSLog(@"signup error:%@",error);
@@ -187,6 +249,8 @@
             }
         }
     }];
+        
+    }
 }
 
 //
@@ -201,27 +265,28 @@
     
   
     
-    if (passwordTextField.text.length <= 0) {
+    if (passwordTextField.text.length <= 0)
+    {
         [errMsg appendString:@"Password is required.\n"];
-    } else if (![passwordTextField.text isEqualToString:password2TextField.text]) {
-        [errMsg appendString:@"Password fields don't match.\n"];
+    }
+    if (![passwordTextField.text isEqualToString:password2TextField.text])
+    {
+        
+        UIAlertView *av = [[[UIAlertView alloc] initWithTitle:@"Registration Error" message:@"Password fields don't match.\n" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil] autorelease];
+        [av show];
+        return NO;
     }
     
     if (emailTextField.text.length <= 0) {
         [errMsg appendString:@"Retailer ID is required.\n"];
     } else if (![self validateEmail:emailTextField.text]) {
-        //level of retailer_id auth
-       // PFObject *rs = [PFObject objectWithClassName:@"Retailer"];
-     //   NSString *the_id = [rs objectForKey:@"retailer_id"];
-        //if(emailTextField.text == the_id)
-     //   { [errMsg appendString:@"Valid Retailer ID is required.\n"]; return NO; }
+
         return YES;
-        //[errMsg appendString:@"Invalid email address.\n"];
     }
     
     if (errMsg.length > 0) {
         UIAlertView *av = [[[UIAlertView alloc] initWithTitle:@"Registration Error" message:errMsg delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil] autorelease];
-        [av show];
+        [av show];  
         return NO;
     }
     
@@ -327,109 +392,7 @@
     return YES;
 }
 
-#pragma mark - UIPickerView Delegate/Datasource
 
-- (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return [genderOptions objectAtIndex:row];
-}
 
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
-    return 1;
-}
-
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    return [genderOptions count];
-}
-
-#pragma mark - Facebook
-
-- (void)fbLogin
-{
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    // The permissions requested from the user
-    NSArray *permissionsArray = @[ @"user_about_me", @"email", @"user_relationships", @"user_birthday", @"user_location"];
-    
-    // Login PFUser using Facebook
-    [PFFacebookUtils logInWithPermissions:permissionsArray block:^(PFUser *user, NSError *error) {
-        if (!user) {
-            if (!error) {
-                NSLog(@"Uh oh. The user cancelled the Facebook login.");
-            } else {
-                NSLog(@"Uh oh. An error occurred: %@", error);
-            }
-        } else if (user.isNew) {
-            NSLog(@"User with facebook signed up and logged in!");
-            if (error) {
-                NSLog(@"signup error: %@",error);
-            }
-            
-            [self setUserFromFacebook];
-            [appDelegate.window setRootViewController:appDelegate.tabBarController];
-        } else {
-            NSLog(@"User with facebook logged in!");
-            if (error) {
-                NSLog(@"login error: %@",error);
-            }
-            
-            [self setUserFromFacebook];
-            [appDelegate.window setRootViewController:appDelegate.tabBarController];
-        }
-    }];
-}
-
-- (void)setUserFromFacebook
-{
-    // Create request for user's Facebook data
-    FBRequest *request = [FBRequest requestForMe];
-    
-    // Send request to Facebook
-    [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        if (!error) {
-            // result is a dictionary with the user's Facebook data
-            NSDictionary *userData = (NSDictionary *)result;
-            
-            PFUser *user = [PFUser currentUser];
-            user.username = [userData objectForKey:@"id"];
-            user.email = [userData objectForKey:@"email"];
-            [user setObject:[userData objectForKey:@"gender"] forKey:@"gender"];
-            [user setObject:[userData objectForKey:@"birthday"] forKey:@"birth_date"];
-            [user setObject:[userData objectForKey:@"first_name"] forKey:@"first_name"];
-            [user setObject:[userData objectForKey:@"last_name"] forKey:@"last_name"];
-            
-            NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
-            User *localUser = [User MR_findFirstByAttribute:@"username" withValue:user.username];
-            if (localUser == nil) {
-                localUser = [User MR_createInContext:localContext];
-            }
-            [localUser setFromParse:user];
-            [localContext MR_saveToPersistentStoreAndWait];
-            
-            //            PFQuery *existinguserquery = [PFUser query];
-            //            [existinguserquery whereKey:@"username" equalTo:user.username];
-            //            NSArray *existingusers = [existinguserquery findObjects];
-            //            if ([existingusers count] > 0) {
-            //                // if user exists, then link 'em
-            //                PFUser *existinguser = [existingusers objectAtIndex:0];
-            //                if (![PFFacebookUtils isLinkedWithUser:existinguser]) {
-            //                    [PFFacebookUtils linkUser:existinguser permissions:@[ @"user_about_me", @"email", @"user_relationships", @"user_birthday", @"user_location"] block:^(BOOL succeeded, NSError *error){
-            //                        NSLog(@"%@",error);
-            //                    }];
-            //                    NSLog(@"%@",[PFUser currentUser]);
-            //                }
-            //            }
-            
-            NSError *error = nil;
-            [user save:&error];
-            if (error != nil) {
-                NSLog(@"PFUser save error - fb callback: %@",[error description]);
-            }
-            
-            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [appDelegate.placesvc loadPlaces];
-        } else {
-            NSLog(@"fb error: %@",error);
-        }
-    }];
-}
 
 @end

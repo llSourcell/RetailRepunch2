@@ -40,8 +40,38 @@ int x = 2;
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     UIToolbar * gtb = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 45)];
     [gtb setBackgroundImage:[UIImage imageNamed:@"bkg_header"] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
+    
+    
+    UIBarButtonItem *flex = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];
+    
+    UIImage *settingsImage = [UIImage imageNamed:@"ico-settings"];
+    UIButton *settingsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [settingsButton setFrame:CGRectMake(0, 0, settingsImage.size.width, settingsImage.size.height)];
+    [settingsButton setImage:settingsImage forState:UIControlStateNormal];
+    [settingsButton addTarget:self action:@selector(openSettings) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *settingsButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:settingsButton] autorelease];
+    
+    
+    
+    
+    UIImageView *logoImageView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"repunch-logo"]] autorelease];
+    UIBarButtonItem *logo = [[[UIBarButtonItem alloc] initWithCustomView:logoImageView] autorelease];
+    
+    
+    UIImage *searchImage = [UIImage imageNamed:@"ico-search"];
+    UIButton *searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [searchButton setFrame:CGRectMake(0, 0, searchImage.size.width, searchImage.size.height)];
+    [searchButton setImage:searchImage forState:UIControlStateNormal];
+    [searchButton addTarget:self action:@selector(openSearch) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *searchButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:searchButton] autorelease];
+    
+    [gtb setItems:[NSArray arrayWithObjects:flex,logo,flex, nil]];
+
     [self.view addSubview:gtb];
- 
+    
+    
     
     UIImage *inboxBackImage = [UIImage imageNamed:@"btn-back-inbox"];
     UIImage *barBackBtnImg = [inboxBackImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, 15, 0, 5)];

@@ -9,13 +9,14 @@
 #import "RetailerPunch.h"
 #import "PlacesViewController.h"
 #import "User.h"
+#import "SettingsNavigationController.h"
 
 @interface RetailerPunch ()
 
 @end
 
 @implementation RetailerPunch
-@synthesize addPunch, minusPunch, amount, submit, myInt, phone, doneButton, place;
+@synthesize addPunch, minusPunch, amount, submit, myInt, phone, doneButton, place, settings, keyboard_counter;
 
 - (id)init
 {
@@ -28,10 +29,17 @@
     return self;
 }
 
+- (void) viewDidAppear:(BOOL)animated
+{
+    keyboard_counter = 1;
+
+}
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    myInt = 1;
     // Do any additional setup after loading the view from its nib.
     [phone setReturnKeyType:UIReturnKeyDone];
     phone.delegate = self;
@@ -45,7 +53,24 @@
     
      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardDidShowNotification object:nil];
     
+    //dismiss keyboard
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
+                    
+    [self.view addGestureRecognizer:tap];
    
+}
+-(void) dismissKeyboard
+{
+    [phone resignFirstResponder];
+}
+
+- (void) viewDidDisappear:(BOOL)animated
+{
+    keyboard_counter = keyboard_counter - 1;
+    [doneButton removeFromSuperview];
+    [doneButton release];
+    [phone resignFirstResponder];
+
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
@@ -71,6 +96,7 @@
 
 - (void) doneButton:(UIButton *) done
 {
+ 
     [phone resignFirstResponder];
     
     UIActivityIndicatorView *activityView=[[UIActivityIndicatorView alloc]     initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -84,30 +110,45 @@
     [self.view addSubview:activityView];
     
     
+
     
-    //Do REST Call to Server
-    //1. FOR The user account with the specified 5 digit code
+
+    //get retailer_id and retailer_name
+    NSString *final_id;
+    NSString *final_name;
     
     PFUser *pfuser = [PFUser currentUser];
-    User *localUser = [User MR_findFirstByAttribute:@"username" withValue:[pfuser username]];
-    NSMutableArray* placesData = [(NSMutableArray *)[localUser.my_places allObjects] retain];
-
-
-    Retailer *test =  [placesData objectAtIndex:0];
-  
-    NSLog(@"testing bitch %@", test.name);
-    NSLog(@"testing bitch %@", test.retailer_id);
-
-    
-        // if user places, it came from parse in the first place, so don't resave
+    NSLog(@"Yay %@", pfuser);
+    PFRelation *employee_relation = [pfuser relationforKey:@"employee"];
+    PFQuery *employee_class = [employee_relation query];
+    NSArray *employee_data = [employee_class findObjects];
+    if([employee_data count] != 0)
+    {
+        PFObject *test = [employee_data objectAtIndex:0];
+        NSString *retailer_id = [test objectForKey:@"retailer_id"];
+        NSLog(@"YO %@",retailer_id);
+        final_id = retailer_id;
+        PFQuery *query2 = [PFQuery queryWithClassName:@"Retailer"];
+        [query2 whereKey:@"retailer_id" equalTo:retailer_id];
+        NSArray *place_array = [query2 findObjects];
+        PFObject *retailer_place = [place_array objectAtIndex:0];
+        final_name = [retailer_place objectForKey:@"name"];
         
-    
         
-    
-
-    
-    NSString *retailer_id = self.place.retailer_id;
-    NSString *retailer_name = self.place.name;
+    }
+    else
+    {
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        NSString *signup_retailer_id = [prefs stringForKey:@"sign_up_id"];
+        NSLog(@"YO %@", signup_retailer_id);
+        final_id = signup_retailer_id;
+        PFQuery *query2 = [PFQuery queryWithClassName:@"Retailer"];
+        [query2 whereKey:@"retailer_id" equalTo:signup_retailer_id];
+        NSArray *place_array = [query2 findObjects];
+        PFObject *retailer_place = [place_array objectAtIndex:0];
+        final_name  = [retailer_place objectForKey:@"name"];
+        
+    }
 
     
     //1. Store 5 digit code
@@ -120,29 +161,11 @@
     
     //2. set num punches to a string, then dictionary for json sending
     NSString *num_punches = [NSString stringWithFormat:@"%d", myInt];
-    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:num_punches, @"num_punches", test.retailer_id, @"retailer_id", test.name, @"retailer_name", code, @"punch_code" ,nil];
+    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:num_punches, @"num_punches", final_id, @"retailer_id", final_name, @"retailer_name", code, @"punch_code" ,nil];
+    NSLog(@"retailer_id: %@", final_id);
+    NSLog(@"retailer_name: %@", final_name);
     
-    //3. Find user who has 5-digit code
-    PFQuery *query = [PFUser query];
-    [query whereKey:@"punch_code" equalTo:code];
-    [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error)
-    {
-        if (!object)
-        {
-            NSLog(@"The getFirstObject request failed.");
-            [activityView stopAnimating];
-            
-            UIAlertView *alert = [[UIAlertView alloc]
-                                  initWithTitle: @"Failure!"
-                                  message: @"Five digit code not found"
-                                  delegate: nil
-                                  cancelButtonTitle:nil
-                                  otherButtonTitles:@"OK",nil];
-            
-            [alert show];
-        }
-        else
-        {
+        
                 
             //once the user is found...
             //Call the Cloud function, send num punches to send a push notification to the user
@@ -181,15 +204,15 @@
             [push sendPushInBackground];
             NSLog(@"Success!!!!!");
             */
-        }
-    }];
+        
+  
 
 
 
        
 
     
-       
+    
     
    
 
@@ -204,7 +227,8 @@
 
 - (void)keyboardWillShow:(NSNotification *)note {
     
-    
+    if(keyboard_counter ==1)
+    {
     doneButton  = [[UIButton alloc] initWithFrame:CGRectMake(0, 163, 106, 53)];
     doneButton.adjustsImageWhenHighlighted = NO;
     [doneButton setImage:[UIImage imageNamed:@"done.png"] forState:UIControlStateNormal];
@@ -223,21 +247,39 @@
                 [keyboard addSubview:doneButton];
         }
     }
+    }
     
 }
+
 
 -(IBAction)addPunch:(id)sender;
 {
     NSLog(@"plus clicked");
-    
+    if(myInt <5)
+    {
     myInt++;
     NSString *string = [NSString stringWithFormat:@"%d", myInt];
     [amount setText:string];
+    }
 }
+
+-(IBAction)settings_pressed:(id)sender
+{
+    NSLog(@"pressed");
+    /*
+    SettingsNavigationController *snc = [[SettingsNavigationController alloc] init];
+    //[snc setDelegate:self];
+    [snc.navigationBar setBackgroundImage:[UIImage imageNamed:@"bkg_header"] forBarMetrics:UIBarMetricsDefault];
+    [snc.view setFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+    [self.view addSubview:snc.view];
+   // [self animateView:snc.view up:YES distance:self.view.frame.size.height completion:nil];
+     */
+}
+
 
 -(IBAction)minusPunch:(id)sender;
 {
-    if(myInt != 0)
+    if(myInt != 1)
     {
         NSLog(@"minus clicked");
         NSLog(@"plus clicked");

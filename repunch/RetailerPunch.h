@@ -22,6 +22,8 @@
      UIButton *doneButton;
     Retailer *place;
 
+    IBOutlet UIButton *settings;
+
     
     
 }
@@ -31,11 +33,17 @@
 @property (weak, nonatomic) IBOutlet UILabel *amount;
 @property (nonatomic, readwrite) int myInt;
 
+@property (nonatomic, readwrite) int keyboard_counter;
+
+
 @property (nonatomic, retain) UITextField *phone;
 
 @property (nonatomic, retain) UIButton *doneButton;
 
 @property (nonatomic, retain) Retailer *place;
+
+@property (nonatomic, retain) UIButton *settings;
+
 
 
 
@@ -46,6 +54,8 @@
 -(IBAction)submit:(id)sender;
 
 -(IBAction)phone_pressed:(id)sender;
+
+-(IBAction)settings_pressed:(id)sender;
 
 
 

@@ -109,12 +109,31 @@
 
 - (void)loginUser
 {
-    [PFUser logInWithUsernameInBackground:usernameTextField.text password:passwordTextField.text block:^(PFUser *user, NSError *error) {
-        if (user) {
+    /*
+        //Find Employee Class
+    PFQuery *query = [PFQuery queryWithClassName:@"Employee"];
+    [query whereKey:@"username" equalTo:usernameTextField.text];
+    [query whereKey:@']
+     */
+    
+    
+ 
+   
+    
+    [PFUser logInWithUsernameInBackground:usernameTextField.text password:passwordTextField.text block:^(PFUser *user, NSError *error)
+     {
+        if (user)
+        {
+          
+            BOOL is_employee = [[user objectForKey:@"is_employee"] boolValue];
+            if(is_employee == 1)
+            {
+            
 
             NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
             User *localUser = [User MR_findFirstByAttribute:@"username" withValue:user.username];
-            if (localUser == nil) {
+            if (localUser == nil)
+            {
                 localUser = [User MR_createInContext:localContext];
             }
             [localUser setFromParse:user];
@@ -124,23 +143,25 @@
             [appDelegate.window setRootViewController:appDelegate.tabBarController];
             [appDelegate.placesvc loadPlaces];
             
-            NSUserDefaults *testy = [NSUserDefaults standardUserDefaults];
-            NSData *local = [testy dataForKey:@"device_token"];
-            NSLog(@"I got it motherfucker %@", local);
-            
-            
-            NSString *retailer = [testy stringForKey:@"memorial_day"];
-            NSLog(@"yo BITCH %@", retailer);
-            
+            }
+            else
+            {
+               UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Not an Employee" message:@"Invalid login credentials" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+              [av show];
+           }
+
             
          
             
            
             ///////
             
-        } else {
+        }
+        else
+        {
             // The login failed. Check error to see why.
-            if (error.code == 101) {
+            if (error.code == 101)
+            {
                 UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"Login Error" message:@"Invalid login credentials" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                 [av show];
             }

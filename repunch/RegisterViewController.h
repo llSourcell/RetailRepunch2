@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CustomTextField.h"
 
-@interface RegisterViewController : UIViewController <UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate>{
+@interface RegisterViewController : UIViewController < UIPickerViewDataSource, UIPickerViewDelegate>{
     UIScrollView *scrollView;
     UITextField *activeField;
     CustomTextField *usernameTextField;
@@ -18,6 +18,10 @@
     CustomTextField *emailTextField;
     CustomTextField *birthdayTextField;
     CustomTextField *genderTextField;
+    CustomTextField *first_name;
+    CustomTextField *last_name;
+    CustomTextField *email;
+    
     UIDatePicker *datePicker;
     UIToolbar *dateDoneView;
     UIPickerView *genderPicker;

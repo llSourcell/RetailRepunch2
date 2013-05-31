@@ -96,6 +96,7 @@
     
     if ([PFUser currentUser]) // Check if user is cached
     {
+        NSLog(@"The user %@", [PFUser currentUser]);
         [placesvc loadPlaces];
         self.window.rootViewController = self.tabBarController;
     } else {

@@ -26,6 +26,7 @@
     UITableView *placeRewardsTable;
     Retailer *place;
     NSMutableArray *placeRewardData;
+    PFObject *retailer_place;
 
 }
 
@@ -41,6 +42,8 @@
 @property (nonatomic, retain) UITableView *placeRewardsTable;
 
 @property (nonatomic, retain) Retailer *place;
+@property (nonatomic, retain) PFObject *retailer_place;
+
 @property (nonatomic, retain) NSMutableArray *placeRewardData;
 
 

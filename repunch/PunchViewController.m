@@ -11,6 +11,8 @@
 #import "Retailer.h"
 #import "User.h"
 #import <Parse/Parse.h>
+#import "GlobalToolbar.h"
+
 
 @interface PunchViewController ()
 
@@ -36,6 +38,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+  
     
     [self.view setBackgroundColor:[UIColor whiteColor]];
     

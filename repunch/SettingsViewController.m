@@ -80,13 +80,14 @@
 {
     NSInteger rows = 0;
     
-    switch (section) {
+    switch (section)
+    {
         case 0:
             rows = 2;
             break;
             
         case 1:
-            rows = 3;
+            rows = 1;
             break;
             
         case 2:
@@ -134,37 +135,42 @@
         case 0:
             switch (indexPath.row) {
                 case 0:
+                    cell.textLabel.text = @"Terms and Conditions";
+                    break;
+                    
+                case 1:
                     cell.textLabel.text = @"Version";
                     cell.detailTextLabel.text = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
                     cell.selectionStyle = UITableViewCellSelectionStyleNone;
                     break;
                     
-                case 1:
-                    cell.textLabel.text = @"Log out";
-                    PFUser *pfuser = [PFUser currentUser];
-                    
-                    NSString *loggedInAs = @"";
-                    if ([pfuser objectForKey:@"first_name"] != nil && ![[pfuser objectForKey:@"first_name"] isEqualToString:@""]
-                        && [pfuser objectForKey:@"last_name"] != nil && ![[pfuser objectForKey:@"last_name"] isEqualToString:@""])
-                    {
-                        loggedInAs = [NSString stringWithFormat:@"%@ %@",[pfuser objectForKey:@"first_name"],[pfuser objectForKey:@"last_name"]];
-                    } else {
-                        loggedInAs = [pfuser username];
-                    }
-                    
-                    
-                    cell.detailTextLabel.text = [NSString stringWithFormat:@"Logged in as %@",loggedInAs];
+        
                     break;
             }            
             break;
+        case 1:
+            switch (indexPath.row)
+        {
+            case 0:
+                cell.textLabel.text = @"Log out";
+                PFUser *pfuser = [PFUser currentUser];
+                
+                NSString *loggedInAs = @"";
+                if ([pfuser objectForKey:@"first_name"] != nil && ![[pfuser objectForKey:@"first_name"] isEqualToString:@""]
+                    && [pfuser objectForKey:@"last_name"] != nil && ![[pfuser objectForKey:@"last_name"] isEqualToString:@""])
+                {
+                    loggedInAs = [NSString stringWithFormat:@"%@ %@",[pfuser objectForKey:@"first_name"],[pfuser objectForKey:@"last_name"]];
+                } else {
+                    loggedInAs = [pfuser username];
+                }
+                
+                
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"Logged in as %@",loggedInAs];
+                
+                
+        }
             
-        case 3:
-            switch (indexPath.row) {
-                case 0:
-                    cell.textLabel.text = @"Delete user";
-                    break;
-            }
-            break;
+
     }
     
     return cell;
@@ -177,11 +183,28 @@
     switch (indexPath.section) {
         case 0:
             switch (indexPath.row) {
-                case 0:
-                    
+
+                case 0:{
+                    LegalViewController *lvc = [[LegalViewController alloc] init];
+
+                    lvc.document = @"terms";
+                    [self.navigationController pushViewController:lvc animated:YES];
+                    [lvc release];
                     break;
-                
+                    
+                }
+                   
+
                 case 1:{
+
+                }
+            }
+            break;
+            
+        case 1:{
+            
+            switch (indexPath.row) {
+                case 0:{
                     [PFUser logOut];
                     
                     AppDelegate *ad = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -192,48 +215,13 @@
                     [self closeSettings];
                     break;
                 }
-            }
-            break;
-            
-        case 1:{
-            LegalViewController *lvc = [[LegalViewController alloc] init];
-            
-            switch (indexPath.row) {
-                case 0:
-                    lvc.document = @"terms";
-                    break;
-                case 1:
-                    lvc.document = @"privacy";
-                    break;
-                case 2:
-                    lvc.document = @"licenses";
-                    break;
+                   
             }            
-            [self.navigationController pushViewController:lvc animated:YES];
-            [lvc release];
+ 
             
             break;
         }
-        case 2:
-            if (indexPath.row == 1) {
-               
-            }
-            break;
-        case 3:
-            switch (indexPath.row) {
-                case 0:
-                    [[PFUser currentUser] delete];
-                    
-                    AppDelegate *ad = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    LandingViewController *landingVC = [[LandingViewController alloc] init];
-                    ad.lvc = landingVC;
-                    ad.window.rootViewController = ad.lvc;
-                    
-                    [self closeSettings];
-                    
-                    break;
-            }
-            break;            
+            
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
